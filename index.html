@@ -1,0 +1,28 @@
+<script>
+    async function updateDashboard() {
+        try {
+            // سحب البيانات من المحرك اللي عملناه
+            const response = await fetch('/api/dashboard');
+            const data = await response.json();
+
+            // تحديث الأرقام في الواجهة
+            document.getElementById('esc-rate').innerText = data.military_escalation + '%';
+            document.getElementById('war-duration').innerText = data.war_duration + ' يوم';
+            
+            // تحديث الأخبار
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = '';
+            data.official_news.forEach(news => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center space-x-3 text-gray-300';
+                li.innerHTML = `<span class="w-2 h-2 bg-red-600 rounded-full"></span><span>${news.content}</span>`;
+                newsList.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    // تشغيل التحديث فور فتح الصفحة
+    updateDashboard();
+</script>
